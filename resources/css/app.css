@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+@source '../views/**/*.blade.php';
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'DM Mono', ui-monospace, monospace;
+    --color-ink: #07111f;
+    --color-paper: #f1f4f3;
+    --color-cyan: #00d9ff;
+    --color-line: #cad3d5;
+}
+
+@layer base {
+    html { scroll-behavior: smooth; }
+    body { @apply bg-paper text-ink antialiased dark:bg-ink dark:text-slate-100; }
+    ::selection { @apply bg-cyan text-ink; }
+    :focus-visible { @apply outline-2 outline-offset-4 outline-cyan; }
+}
+
+@layer components {
+    .shell { @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12; }
+    .section { @apply py-20 sm:py-28; }
+    .kicker { @apply mb-5 flex items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[.2em] text-slate-500 dark:text-cyan; }
+    .kicker::before { content: ''; @apply h-px w-8 bg-cyan; }
+    .display { @apply max-w-5xl text-4xl font-bold leading-[1.02] tracking-[-.045em] sm:text-6xl lg:text-7xl; }
+    .lede { @apply max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300; }
+    .btn-primary { @apply inline-flex items-center justify-center gap-2 bg-ink px-6 py-3.5 text-sm font-bold text-white transition hover:bg-cyan hover:text-ink dark:bg-cyan dark:text-ink dark:hover:bg-white; }
+    .btn-secondary { @apply inline-flex items-center justify-center gap-2 border border-slate-300 px-6 py-3.5 text-sm font-bold transition hover:border-ink dark:border-slate-600 dark:hover:border-cyan; }
+    .panel { @apply border border-slate-300 bg-white/55 dark:border-slate-700 dark:bg-white/[.035]; }
+    .field { @apply w-full border border-slate-300 bg-white px-3 py-2.5 text-sm text-ink focus:border-cyan focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white; }
+    .label { @apply mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500; }
+    .prose-copy p { @apply mb-5 leading-8 text-slate-600 dark:text-slate-300; }
+}
+
+[x-cloak] { display: none !important; }
+@media print { .no-print { display: none !important; } body { background: white !important; color: #07111f !important; } .section { padding-top: 1.5rem; padding-bottom: 1.5rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

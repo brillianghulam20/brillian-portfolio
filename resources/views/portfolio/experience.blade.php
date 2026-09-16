@@ -1,0 +1,5 @@
+@extends('layouts.app')
+@section('title', 'Pengalaman | Brillian Ghulam')
+@section('content')
+<section class="section shell"><p class="kicker">Experience / Timeline</p><h1 class="display">Pengalaman yang dibangun dari proses nyata.</h1><div class="mt-16">@foreach ($experiences as $experience)<article class="grid gap-5 border-t border-slate-300 py-10 dark:border-slate-700 lg:grid-cols-[.3fr_.7fr]"><div><p class="font-mono text-xs text-slate-500">{{ $experience->started_at?->format('M Y') }} — {{ $experience->is_current ? 'Sekarang' : $experience->ended_at?->format('M Y') }}</p><p class="mt-3 font-bold">{{ $experience->company }}</p></div><div><h2 class="text-3xl font-bold tracking-tight">{{ $experience->position }}</h2><p class="mt-4 leading-7 text-slate-600 dark:text-slate-300">{{ $experience->description }}</p><ul class="mt-6 grid gap-3 text-sm sm:grid-cols-2">@foreach ($experience->responsibilities ?? [] as $item)<li class="flex gap-3"><span class="text-cyan">↳</span><span>{{ $item }}</span></li>@endforeach</ul></div></article>@endforeach</div></section>
+@endsection

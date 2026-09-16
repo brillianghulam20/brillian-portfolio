@@ -1,0 +1,18 @@
+@php($get=fn($field,$default='')=>old($field,$item?->{$field}??$default))
+<div class="grid gap-4 sm:grid-cols-2">
+@if($type==='experiences')
+<div><label class="label">Company</label><input class="field" name="company" value="{{ $get('company') }}" required></div><div><label class="label">Position</label><input class="field" name="position" value="{{ $get('position') }}" required></div><div><label class="label">Start date</label><input type="date" class="field" name="started_at" value="{{ $item?->started_at?->format('Y-m-d') }}"></div><div><label class="label">End date</label><input type="date" class="field" name="ended_at" value="{{ $item?->ended_at?->format('Y-m-d') }}"></div><div class="sm:col-span-2"><label class="label">Description</label><textarea class="field" name="description" rows="3">{{ $get('description') }}</textarea></div><div><label class="label">Responsibilities (one per line)</label><textarea class="field" name="responsibilities_text" rows="6">{{ old('responsibilities_text',implode("\n",$item?->responsibilities??[])) }}</textarea></div><div><label class="label">Technologies (one per line)</label><textarea class="field" name="technologies_text" rows="6">{{ old('technologies_text',implode("\n",$item?->technologies??[])) }}</textarea></div><label><input type="checkbox" name="is_current" value="1" @checked($get('is_current'))> Current role</label><label><input type="checkbox" name="is_published" value="1" @checked($item?$item->is_published:true)> Published</label>
+@elseif($type==='educations')
+<div><label class="label">Institution</label><input class="field" name="institution" value="{{ $get('institution') }}" required></div><div><label class="label">Degree</label><input class="field" name="degree" value="{{ $get('degree') }}" required></div><div><label class="label">Major</label><input class="field" name="major" value="{{ $get('major') }}"></div><div><label class="label">Description</label><input class="field" name="description" value="{{ $get('description') }}"></div><div><label class="label">Start year</label><input type="number" class="field" name="start_year" value="{{ $get('start_year') }}"></div><div><label class="label">End year</label><input type="number" class="field" name="end_year" value="{{ $get('end_year') }}"></div>
+@elseif($type==='skills')
+<div><label class="label">Category</label><select class="field" name="skill_category_id">@foreach($categories as $category)<option value="{{ $category->id }}" @selected($get('skill_category_id')==$category->id)>{{ $category->name }}</option>@endforeach</select></div><div><label class="label">Skill</label><input class="field" name="name" value="{{ $get('name') }}" required></div>
+@elseif($type==='certificates')
+<div><label class="label">Certificate</label><input class="field" name="name" value="{{ $get('name') }}" required></div><div><label class="label">Issuer</label><input class="field" name="issuer" value="{{ $get('issuer') }}" required></div><div><label class="label">Issue date</label><input type="date" class="field" name="issued_at" value="{{ $item?->issued_at?->format('Y-m-d') }}"></div><div><label class="label">Credential URL</label><input class="field" name="credential_url" value="{{ $get('credential_url') }}"></div>
+@else
+<div><label class="label">Category name</label><input class="field" name="name" value="{{ $get('name') }}" required></div><div><label class="label">Slug</label><input class="field" name="slug" value="{{ $get('slug') }}" required></div>
+@endif
+@if($type!=='project-categories')
+<div><label class="label">Display order</label><input type="number" min="0" class="field" name="sort_order" value="{{ $get('sort_order',0) }}" required></div></div>
+@else
+</div>
+@endif
