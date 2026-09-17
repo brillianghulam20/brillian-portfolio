@@ -6,6 +6,7 @@
     <meta name="description" content="@yield('description', 'Portfolio Brillian Ghulam, System Analyst dan ERP Implementor.')">
     <link rel="canonical" href="{{ url()->current() }}">
     <meta property="og:type" content="website"><meta property="og:title" content="@yield('title', $profile?->name ?? 'Brillian Ghulam')"><meta property="og:description" content="@yield('description', $profile?->tagline ?? '')"><meta property="og:url" content="{{ url()->current() }}">
+    @if($profile?->photo_path)<meta property="og:image" content="{{ Storage::url($profile->photo_path) }}"><meta property="og:image:alt" content="Foto {{ $profile->name }}">@endif
     <meta name="twitter:card" content="summary_large_image">
     <script>document.documentElement.classList.toggle('dark',localStorage.theme==='dark'||((!localStorage.theme||localStorage.theme==='system')&&matchMedia('(prefers-color-scheme:dark)').matches))</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

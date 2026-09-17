@@ -44,6 +44,7 @@ cp database/seeders/assets/CV-Brillian-Ghulam.pdf "$OUTPUT_DIR/CV-Brillian-Ghula
 
 find "$OUTPUT_DIR" -type f -name '*.html' -exec sed -i \
     -e "s|/storage/profile/brillian-ghulam.png|/profile.png|g" \
+    -e "s|content=\"$SITE_URL/storage/profile/brillian-ghulam.png\"|content=\"$SITE_URL/profile.png\"|g" \
     -e "s|href=\"/|href=\"$SITE_URL/|g" \
     -e "s|src=\"/|src=\"$SITE_URL/|g" {} +
 
