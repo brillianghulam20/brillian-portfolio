@@ -71,4 +71,20 @@ class AdminTest extends TestCase
 
         $this->assertDatabaseHas('project_categories', ['slug' => 'internal-tools']);
     }
+
+    public function test_admin_can_upload_a_project_thumbnail(): void
+    {
+        Storage::fake('public');
+        $project = Project::query()->firstOrFail();
+
+        $this->actingAs(User::query()->firstOrFail())->put(route('admin.projects.update', $project), [
+            'project_category_id' => $project->project_category_id, 'name' => $project->name, 'slug' => $project->slug,
+            'short_description' => $project->short_description, 'problem' => $project->problem, 'solution' => $project->solution,
+            'project_status' => $project->project_status, 'publishing_status' => 'published', 'sort_order' => 1,
+            'features_text' => implode("\n", $project->features), 'technologies_text' => implode("\n", $project->technologies),
+            'thumbnail' => UploadedFile::fake()->image('project.webp', 1200, 675),
+        ])->assertSessionHasNoErrors();
+
+        Storage::disk('public')->assertExists(Project::query()->findOrFail($project->id)->thumbnail_path);
+    }
 }

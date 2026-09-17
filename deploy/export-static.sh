@@ -45,8 +45,8 @@ find "$OUTPUT_DIR" -type f -name '*.html' -exec sed -i \
     -e "s|href=\"/|href=\"$SITE_URL/|g" \
     -e "s|src=\"/|src=\"$SITE_URL/|g" {} +
 
-find "$OUTPUT_DIR" -type f -name '*.html' -exec sed -i \
-    '/<script id="browser-logger-active">/,/<\/script>/d' {} +
+find "$OUTPUT_DIR" -type f -name '*.html' -exec perl -0pi -e \
+    's/<script id="browser-logger-active">.*?<\/script>//s' {} +
 
 cat > "$OUTPUT_DIR/robots.txt" <<EOF
 User-agent: *

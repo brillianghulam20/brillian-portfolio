@@ -15,13 +15,13 @@ class PortfolioTest extends TestCase
 
     public function test_public_pages_render_seeded_content(): void
     {
-        $this->get('/')->assertOk()->assertSee('Memahami proses.')->assertSee('WhatsApp Finance Bot');
+        $this->get('/')->assertOk()->assertSee('Solusi bisnis dimulai dari')->assertSee('WhatsApp Finance Bot');
         $this->get('/about')->assertOk()->assertSee('Brillian Ghulam Ash Shidiq');
         $this->get('/experience')->assertOk()->assertSee('PT. BEHAESTEX');
         $this->get('/skills')->assertOk()->assertSee('Requirement Gathering');
         $this->get('/projects')->assertOk()->assertSee('Document Tracking System');
         $this->get('/resume')->assertOk()->assertSee('Curriculum Vitae');
-        $this->get('/contact')->assertOk()->assertSee('brillianghulam@gmail.com');
+        $this->get('/contact')->assertOk()->assertSee('Mulai percakapan')->assertSee('brillianghulam@gmail.com');
     }
 
     public function test_only_published_projects_are_publicly_accessible(): void

@@ -35,6 +35,7 @@ class ProjectRequest extends FormRequest
             'project_year' => ['nullable', 'integer', 'min:2000', 'max:2100'], 'publishing_status' => ['required', 'in:draft,published,archived'],
             'is_featured' => ['nullable', 'boolean'], 'sort_order' => ['required', 'integer', 'min:0'], 'seo_title' => ['nullable', 'string', 'max:180'],
             'meta_description' => ['nullable', 'string', 'max:320'], 'thumbnail' => ['nullable', 'image', 'max:4096'], 'architecture_image' => ['nullable', 'image', 'max:4096'],
+            'remove_thumbnail' => ['nullable', 'boolean'], 'remove_architecture_image' => ['nullable', 'boolean'],
             'gallery_images' => ['nullable', 'array', 'max:10'], 'gallery_images.*' => ['image', 'max:4096'],
         ];
     }

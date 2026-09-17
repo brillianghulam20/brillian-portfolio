@@ -78,7 +78,7 @@ class ProjectController extends Controller
     /** @return array<string, mixed> */
     private function data(ProjectRequest $request, ?Project $project = null): array
     {
-        $data = $request->safe()->except(['features_text', 'technologies_text', 'thumbnail', 'architecture_image', 'gallery_images']);
+        $data = $request->safe()->except(['features_text', 'technologies_text', 'thumbnail', 'architecture_image', 'gallery_images', 'remove_thumbnail', 'remove_architecture_image']);
         foreach (['features', 'technologies'] as $field) {
             $data[$field] = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $request->input($field.'_text', '')) ?: [])));
         }
@@ -89,6 +89,12 @@ class ProjectController extends Controller
                     Storage::disk('public')->delete($project->{$column});
                 }
                 $data[$column] = $request->file($input)->store('projects', 'public');
+            }
+        }
+        foreach (['remove_thumbnail' => 'thumbnail_path', 'remove_architecture_image' => 'architecture_path'] as $input => $column) {
+            if ($request->boolean($input) && $project?->{$column} && ! $request->hasFile(str_replace('remove_', '', $input))) {
+                Storage::disk('public')->delete($project->{$column});
+                $data[$column] = null;
             }
         }
         if ($request->hasFile('gallery_images')) {

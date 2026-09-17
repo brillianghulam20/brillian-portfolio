@@ -4,6 +4,10 @@ Personal portfolio dan interactive CV berbasis Laravel, Blade, Tailwind CSS, Alp
 
 Website publik: [https://brillianghulam20.github.io](https://brillianghulam20.github.io)
 
+Panduan lengkap menjalankan lokal, mengubah konten, push source, dan publish tersedia di [`TUTORIAL.md`](TUTORIAL.md).
+
+Untuk membuka website dari HP, tablet, atau laptop lain dalam Wi-Fi yang sama, baca bagian **Akses dari Perangkat Lain** pada tutorial atau jalankan `setup-network-firewall.bat` sekali lalu `start-network.bat`. Gunakan `stop-network.bat` untuk menghentikan server background.
+
 ## Menjalankan di Windows
 
 Klik dua kali `start-local.bat`. Script akan memasang dependency bila diperlukan, menjalankan migration, membuka Vite, menjalankan Laravel, dan membuka browser.

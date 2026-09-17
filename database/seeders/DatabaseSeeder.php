@@ -38,9 +38,9 @@ class DatabaseSeeder extends Seeder
         if (file_exists(database_path('seeders/assets/CV-Brillian-Ghulam.pdf'))) {
             Storage::disk('public')->put($resumePath, file_get_contents(database_path('seeders/assets/CV-Brillian-Ghulam.pdf')));
         }
-        $photoPath = 'profile/brillian-ghulam.png';
-        if (file_exists(database_path('seeders/assets/profile.png'))) {
-            Storage::disk('public')->put($photoPath, file_get_contents(database_path('seeders/assets/profile.png')));
+        $photoPath = 'profile/brillian-ghulam.jpg';
+        if (file_exists(database_path('seeders/assets/profile.jpg'))) {
+            Storage::disk('public')->put($photoPath, file_get_contents(database_path('seeders/assets/profile.jpg')));
         }
 
         Profile::query()->updateOrCreate(['email' => 'brillianghulam@gmail.com'], [
@@ -91,10 +91,21 @@ class DatabaseSeeder extends Seeder
             ['category' => 'Data Analysis', 'name' => 'Automatic Data Comparison', 'eyebrow' => 'Data Automation / Reconciliation', 'short_description' => 'Alat rekonsiliasi yang menemukan match, mismatch, dan record yang hilang di dua sumber data.', 'problem' => 'Perbandingan dataset operasional berukuran besar secara manual memakan waktu dan berisiko menghasilkan kesalahan.', 'objective' => 'Mempercepat rekonsiliasi dan membuat penyebab perbedaan lebih mudah ditelusuri.', 'solution' => 'Sistem menormalisasi dua sumber, mencocokkan key, mengklasifikasikan hasil, dan menyajikan ringkasan serta detail perbedaan.', 'role' => 'Analisis rule comparison, data mapping, pengembangan proses rekonsiliasi, dan validasi hasil.', 'business_process' => 'Upload source dan comparison → validasi struktur → normalisasi → compare → klasifikasi → export hasil.', 'architecture' => 'File input → validator → normalization service → comparison engine → result dashboard.', 'challenges' => 'Perbedaan tipe data, format tanggal, key tidak unik, dan nilai kosong antar sumber.', 'result' => 'Alur comparison yang repeatable mengurangi pemeriksaan manual dan membuat exception lebih terarah.', 'lessons_learned' => 'Rule normalisasi harus transparan agar hasil rekonsiliasi dapat diaudit.', 'features' => ['Summary hasil', 'Mismatch detection', 'Only source/comparison', 'Detail analysis'], 'technologies' => ['Python', 'SQL', 'DBF', 'Data Analysis'], 'platform' => 'Web / data processing', 'database' => 'File & SQL', 'project_year' => 2026],
             ['category' => 'Enterprise Application', 'name' => 'Document Tracking System', 'eyebrow' => 'Enterprise Application / System Analysis', 'short_description' => 'Sistem pelacakan dokumen dengan QR code, flexible routing, current custodian, dan audit trail.', 'problem' => 'Perpindahan dokumen lintas departemen sulit dilacak dan status kepemilikan terakhir tidak selalu terdokumentasi.', 'objective' => 'Menyediakan jejak perpindahan dokumen yang jelas, fleksibel, dan dapat diaudit.', 'solution' => 'Setiap dokumen memiliki tracking number dan QR code. Serah terima dicatat melalui accept/reject sehingga current custodian dan timeline selalu diperbarui.', 'role' => 'Requirement gathering, business process design, system analysis, database design, testing, UAT, dan implementation support.', 'business_process' => 'Create document → generate QR → handover → accept/reject → update custodian → timeline & audit trail.', 'architecture' => 'User roles → web application → business rules → tracking service → relational database.', 'challenges' => 'Mendukung rute dokumen yang fleksibel tanpa kehilangan kontrol dan auditability.', 'result' => 'Rancangan menyediakan single source of truth untuk posisi dokumen dan histori serah terima.', 'lessons_learned' => 'Status, ownership, dan event history harus dimodelkan terpisah agar tracking tetap akurat.', 'features' => ['Tracking number', 'QR code', 'Universal handover', 'Accept & reject', 'Current custodian', 'Tracking timeline', 'Audit trail'], 'technologies' => ['Laravel', 'PHP', 'PostgreSQL', 'JavaScript'], 'platform' => 'Responsive web application', 'database' => 'PostgreSQL', 'project_year' => 2026],
         ];
+        $projectThumbnails = [
+            'whatsapp-finance-bot' => 'project-finance-bot.svg',
+            'automatic-data-comparison' => 'project-data-comparison.svg',
+            'document-tracking-system' => 'project-document-tracking.svg',
+        ];
         foreach ($projects as $order => $data) {
             $category = ProjectCategory::query()->firstOrCreate(['slug' => Str::slug($data['category'])], ['name' => $data['category']]);
             unset($data['category']);
-            $category->projects()->updateOrCreate(['slug' => Str::slug($data['name'])], array_merge($data, ['project_category_id' => $category->id, 'publishing_status' => 'published', 'project_status' => 'Case Study', 'is_featured' => true, 'sort_order' => $order + 1, 'seo_title' => $data['name'].' | Brillian Ghulam', 'meta_description' => $data['short_description']]));
+            $slug = Str::slug($data['name']);
+            $thumbnailPath = 'projects/'.$projectThumbnails[$slug];
+            $thumbnailSource = database_path('seeders/assets/'.$projectThumbnails[$slug]);
+            if (file_exists($thumbnailSource)) {
+                Storage::disk('public')->put($thumbnailPath, file_get_contents($thumbnailSource));
+            }
+            $category->projects()->updateOrCreate(['slug' => $slug], array_merge($data, ['project_category_id' => $category->id, 'thumbnail_path' => $thumbnailPath, 'publishing_status' => 'published', 'project_status' => 'Case Study', 'is_featured' => true, 'sort_order' => $order + 1, 'seo_title' => $data['name'].' | Brillian Ghulam', 'meta_description' => $data['short_description']]));
         }
 
         foreach (['site_description' => 'Portfolio Brillian Ghulam, System Analyst dan ERP Implementor yang berfokus pada proses bisnis, sistem, data, dan automation.', 'availability' => 'Terbuka untuk peluang dan kolaborasi profesional'] as $key => $value) {
