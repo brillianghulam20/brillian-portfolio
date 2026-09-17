@@ -5,21 +5,16 @@ SOURCE_URL="${SOURCE_URL:-http://127.0.0.1:8000}"
 SITE_URL="${SITE_URL:-https://brillianghulam20.github.io}"
 OUTPUT_DIR="${1:-dist}"
 
-rm -rf "$OUTPUT_DIR"
-mkdir -p "$OUTPUT_DIR"
+if [[ -d "$OUTPUT_DIR/.git" ]]; then
+    git -C "$OUTPUT_DIR" rm -r --ignore-unmatch . >/dev/null 2>&1 || true
+    git -C "$OUTPUT_DIR" clean -fdx -e .git >/dev/null
+else
+    rm -rf "$OUTPUT_DIR"
+    mkdir -p "$OUTPUT_DIR"
+fi
 
-pages=(
-    "/"
-    "/about"
-    "/experience"
-    "/skills"
-    "/projects"
-    "/projects/whatsapp-finance-bot"
-    "/projects/automatic-data-comparison"
-    "/projects/document-tracking-system"
-    "/resume"
-    "/contact"
-)
+curl --fail --silent --show-error "$SOURCE_URL/sitemap.xml" > "$OUTPUT_DIR/sitemap.xml"
+mapfile -t pages < <(sed -n 's:.*<loc>\([^<]*\)</loc>.*:\1:p' "$OUTPUT_DIR/sitemap.xml" | sed -E 's|https?://[^/]+||')
 
 for path in "${pages[@]}"; do
     if [[ "$path" == "/" ]]; then
@@ -30,21 +25,23 @@ for path in "${pages[@]}"; do
     fi
 
     curl --fail --silent --show-error "$SOURCE_URL$path" \
-        | sed "s|$SOURCE_URL|$SITE_URL|g; s|href=\"$SITE_URL/resume/download\"|href=\"$SITE_URL/CV-Brillian-Ghulam.pdf\"|g" \
+        | sed -E "s#https?://(127\.0\.0\.1|localhost)(:[0-9]+)?#$SITE_URL#g; s#href=\"$SITE_URL/resume/download\"#href=\"$SITE_URL/CV-Brillian-Ghulam.pdf\"#g" \
         > "$target"
 done
 
 curl --fail --silent --show-error "$SOURCE_URL/sitemap.xml" \
-    | sed "s|$SOURCE_URL|$SITE_URL|g" \
+    | sed -E "s#https?://(127\.0\.0\.1|localhost)(:[0-9]+)?#$SITE_URL#g" \
     > "$OUTPUT_DIR/sitemap.xml"
 
 cp -R public/build "$OUTPUT_DIR/build"
-cp database/seeders/assets/profile.png "$OUTPUT_DIR/profile.png"
-cp database/seeders/assets/CV-Brillian-Ghulam.pdf "$OUTPUT_DIR/CV-Brillian-Ghulam.pdf"
+if [[ -d storage/app/public ]]; then
+    mkdir -p "$OUTPUT_DIR/storage"
+    cp -R storage/app/public/. "$OUTPUT_DIR/storage/"
+    rm -f "$OUTPUT_DIR/storage/.gitignore"
+fi
+curl --fail --silent --show-error "$SOURCE_URL/resume/download" > "$OUTPUT_DIR/CV-Brillian-Ghulam.pdf"
 
 find "$OUTPUT_DIR" -type f -name '*.html' -exec sed -i \
-    -e "s|/storage/profile/brillian-ghulam.png|/profile.png|g" \
-    -e "s|content=\"$SITE_URL/storage/profile/brillian-ghulam.png\"|content=\"$SITE_URL/profile.png\"|g" \
     -e "s|href=\"/|href=\"$SITE_URL/|g" \
     -e "s|src=\"/|src=\"$SITE_URL/|g" {} +
 
